@@ -38,7 +38,7 @@ fetch(baseUrl.concat('', id))
             productImg.setAttribute("src", productDetails.imageUrl);
             productImg.setAttribute("alt", productDetails.altTxt);
             document.querySelector(".item__img").appendChild(productImg);
-            
+
             // ajout du nom, prix et description
             document.getElementById("title").innerText = productDetails.name;
             document.getElementById("price").innerText = productDetails.price;
@@ -58,5 +58,34 @@ fetch(baseUrl.concat('', id))
             console.log(err);// Une erreur est survenue
             });
 
+
+//ajout de l'article au panier (local storage)
+
+//quand l'utilisateur clique sur la bouton ajouter au panier
+document.getElementById("addToCart").addEventListener('click', function() {
+
+    //récupération des infos id (déjà stocké dans la variable id), quantité et couleur du produit
+    var quantity = document.getElementById('quantity').value;
+    console.log(quantity);
+    var chosenColor = document.getElementById('colors').value;
+    console.log(chosenColor);
+
+    var cart = [];
+    
+}
+
+    //si objet présent avec le même id et la même couleur, mettre à jour la quantité
+    if(id == localStorage.getItem('id') && chosenColor == localStorage.getItem('chosenColor')) {
+        localStorage.setItem("quantity", quantity);
+        console.log('nouvelle quantité');
+    }
+    else { //sinon ajout d'un nouvel objet dans le local storage avec l'id, la quantité et la couleur
+        localStorage.setItem("id", id);
+        localStorage.setItem("quantity", quantity);
+        localStorage.setItem("chosenColor", chosenColor);
+        console.log('nouveau produit');
+    }
+
+});
 
 
