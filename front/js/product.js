@@ -32,6 +32,13 @@ fetch(baseUrl.concat('', id))
             console.log(productDetails);
 
             // ajout des infos de la réponse dans la page pour afficher les infos sur le produit
+
+            // ajout de l'img du produit avec son alt
+            var productImg = document.createElement("img");
+            productImg.setAttribute("src", productDetails.imageUrl);
+            productImg.setAttribute("alt", productDetails.altTxt);
+            document.querySelector(".item__img").appendChild(productImg);
+            
             // ajout du nom, prix et description
             document.getElementById("title").innerText = productDetails.name;
             document.getElementById("price").innerText = productDetails.price;
@@ -44,14 +51,6 @@ fetch(baseUrl.concat('', id))
                 color.innerText = productDetails.colors[i];
                 document.getElementById("colors").appendChild(color);
             }
-            
-            // ajout de l'img du produit avec son alt
-            var productImg = document.createElement("img");
-            productImg.setAttribute("src", productDetails.imageUrl);
-            productImg.setAttribute("alt", productDetails.altTxt);
-            console.log(productImg);
-            console.log(document.getElementsByClassName("item__img"));
-            document.getElementsByClassName("item__img").appendChild(productImg);
 
             
         })
