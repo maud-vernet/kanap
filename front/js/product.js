@@ -1,6 +1,3 @@
-// tableau contenant la liste des produits du panier qui sera stocké dans le local storage
-const cart = [];
-
 let params = new URLSearchParams("https://example.com/?name=Jonathan&age=18");
 let toto = params.get("name"); // is the string "Jonathan"
 let age = parseInt(params.get("age"), 10); // is the number 18
@@ -68,6 +65,17 @@ fetch(baseUrl.concat('', id))
 document.getElementById("addToCart").addEventListener('click', function() {
 
     //récupération des infos id (déjà stocké dans la variable id), quantité et couleur du produit et stockage
+
+    // tableau contenant la liste des produits du panier qui sera stocké dans le local storage
+
+    if (localStorage.getItem('cart') !== null) {
+        console.log(`cart exists`);
+        var cart = JSON.parse(localStorage.getItem('cart'));
+        console.log('cart');
+    } else {
+        console.log(`cart not found`);
+        var cart = [];
+}
 
     //objet pour l'item à ajouter au panier
     const newItem = {
