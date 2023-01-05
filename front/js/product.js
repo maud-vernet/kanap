@@ -1,3 +1,6 @@
+// tableau contenant la liste des produits du panier qui sera stocké dans le local storage
+const cart = [];
+
 let params = new URLSearchParams("https://example.com/?name=Jonathan&age=18");
 let toto = params.get("name"); // is the string "Jonathan"
 let age = parseInt(params.get("age"), 10); // is the number 18
@@ -64,27 +67,46 @@ fetch(baseUrl.concat('', id))
 //quand l'utilisateur clique sur la bouton ajouter au panier
 document.getElementById("addToCart").addEventListener('click', function() {
 
-    //récupération des infos id (déjà stocké dans la variable id), quantité et couleur du produit
-    var quantity = document.getElementById('quantity').value;
-    console.log(quantity);
-    var chosenColor = document.getElementById('colors').value;
-    console.log(chosenColor);
+    //récupération des infos id (déjà stocké dans la variable id), quantité et couleur du produit et stockage
 
-    var cart = [];
+    //objet pour l'item à ajouter au panier
+    const newItem = {
+        id : "toto",
+        quantity : "tata",
+        chosenColor : "titi" 
+      }
+
+    // ajout des infos id, quantité et couleur du produit dans l'objet
+    newItem["id"] = id;
+    newItem["quantity"] = document.getElementById('quantity').value;
+    newItem["chosenColor"] = document.getElementById('colors').value;
+
+    console.log(newItem);
+
+    // ajout de l'objet dans le tableau
+    cart.push(newItem);
+    console.log(cart);
     
+    // ajout du tableau dans le local storage
+    window.localStorage.setItem("cart", JSON.stringify(cart));
+    
+    //récupération du cart dans le local storage
+    var localStorageCart = JSON.parse(localStorage.getItem('cart'));
+    console.log(localStorageCart);
+
+    for(let i in localStorageCart) {
+        console.log(cart[i].id);
+        console.log(cart[i].quantity);
+        console.log(cart[i].chosenColor);
+
+        if(id == localStorageCart[i].id && document.getElementById('colors').value == localStorageCart[i].chosenColor) {
+            console.log('nouvelle quantité');
+        }
+        else { //sinon ajout d'un nouvel objet dans le local storage avec l'id, la quantité et la couleur
+            console.log('nouveau produit');
+        }
 }
 
-    //si objet présent avec le même id et la même couleur, mettre à jour la quantité
-    if(id == localStorage.getItem('id') && chosenColor == localStorage.getItem('chosenColor')) {
-        localStorage.setItem("quantity", quantity);
-        console.log('nouvelle quantité');
-    }
-    else { //sinon ajout d'un nouvel objet dans le local storage avec l'id, la quantité et la couleur
-        localStorage.setItem("id", id);
-        localStorage.setItem("quantity", quantity);
-        localStorage.setItem("chosenColor", chosenColor);
-        console.log('nouveau produit');
-    }
 
 });
 
