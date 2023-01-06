@@ -29,7 +29,6 @@ fetch(baseUrl.concat('', id))
             }
         })
         .then(function(productDetails) {
-            console.log(productDetails);
 
             // ajout des infos de la réponse dans la page pour afficher les infos sur le produit
 
@@ -69,52 +68,51 @@ document.getElementById("addToCart").addEventListener('click', function() {
     // tableau contenant la liste des produits du panier qui sera stocké dans le local storage
 
     if (localStorage.getItem('cart') !== null) {
-        console.log(`cart exists`);
+        console.log('panier déjà existant dans le local storage');
         var cart = JSON.parse(localStorage.getItem('cart'));
-        console.log('cart');
     } else {
-        console.log(`cart not found`);
+        console.log('aucun panier dans le local storage');
         var cart = [];
 }
 
     //objet pour l'item à ajouter au panier
     const newItem = {
         id : "toto",
-        quantity : "tata",
+        quantity : 0,
         chosenColor : "titi" 
       }
 
     // ajout des infos id, quantité et couleur du produit dans l'objet
-    newItem["id"] = id;
-    newItem["quantity"] = document.getElementById('quantity').value;
-    newItem["chosenColor"] = document.getElementById('colors').value;
+    var quantity = parseInt(document.getElementById('quantity').value); //conversion de la quantité du formulaire (string) en integer
+    var chosenColor = document.getElementById('colors').value;
 
-    console.log(newItem);
+    var cartItem = null;
 
-    // ajout de l'objet dans le tableau
-    cart.push(newItem);
-    console.log(cart);
+    for(let i in cart) { //parcours le panier
+
+        //recherche si on a un produit similaire dans le cart (même id et color)
+        if(id == cart[i].id && chosenColor == cart[i].chosenColor) {
+            console.log('produit déjà dans le panier');
+            cartItem = cart[i]; // cartItem devient l'élément trouvé (le produit similaire)
+        }      
+    }
+
+    if(cartItem === null) { //si pas de produit similaire trouvé (donc cartItem est resté null)
+        console.log('produit similaire pas dans le panier');
+        newItem["id"] = id;
+        newItem["chosenColor"] = chosenColor;
+        newItem["quantity"] = quantity;
+
+        // ajout de l'objet dans le tableau cart
+        cart.push(newItem);
+        console.log(cart);
+    }
+    else { // mise à jour de la quantité sur l'élément trouvé ci-dessus
+        cartItem["quantity"] +=quantity; //on additionne la quantité du formulaire avec celle déjà enregistrée dans le produit similaire trouvé dans le cart
+    }
     
     // ajout du tableau dans le local storage
     window.localStorage.setItem("cart", JSON.stringify(cart));
-    
-    //récupération du cart dans le local storage
-    var localStorageCart = JSON.parse(localStorage.getItem('cart'));
-    console.log(localStorageCart);
-
-    for(let i in localStorageCart) {
-        console.log(cart[i].id);
-        console.log(cart[i].quantity);
-        console.log(cart[i].chosenColor);
-
-        if(id == localStorageCart[i].id && document.getElementById('colors').value == localStorageCart[i].chosenColor) {
-            console.log('nouvelle quantité');
-        }
-        else { //sinon ajout d'un nouvel objet dans le local storage avec l'id, la quantité et la couleur
-            console.log('nouveau produit');
-        }
-}
-
 
 });
 
