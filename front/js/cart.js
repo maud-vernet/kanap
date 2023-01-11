@@ -1,10 +1,30 @@
 //récupération du cart dans le local storage si présent
 if (localStorage.getItem('cart') !== null) {
-    console.log('panier dans le local storage');
     var cart = JSON.parse(localStorage.getItem('cart'));
+    
+    
+    // requête la liste des produits et les affiche dans la console
+    fetch("http://localhost:3000/api/products")
+    .then(function(res) {
+    if (res.ok) { // vérifie que la requête s'est bien passée
+        return res.json(); // récupère la réponse en json
+    }
+    })
+    .then(function(productList) {
 
-    //pour chaque item dans cart
+    // pour chaque produit du cart
     for(let i in cart) {
+        //stockage de l'id
+        var cartItemId = cart[i].id ;
+
+        var matchingProduct = null;
+
+        //recherche dans la liste complète des produits venant le l'API
+        for (let i in productList) {
+            if(cartItemId == productList[i]._id) { //si l'id d'un des produit correspond à celle de l'élément du cart
+                matchingProduct = productList[i]; // on stocke ce produit (il sera utilisé pour récupérer des infos plus bas comme l'img)
+            }
+        }
 
         //création d'un article dans #cart__items
         var article = document.createElement("article");
@@ -17,22 +37,22 @@ if (localStorage.getItem('cart') !== null) {
         var cart__item__img = document.createElement("div");
         cart__item__img.setAttribute("class", "cart__item__img");
         var productImg = document.createElement("img");
-        productImg.setAttribute("src", "???");
-        productImg.setAttribute("alt", "???");
+        productImg.setAttribute("src", matchingProduct["imageUrl"]);
+        productImg.setAttribute("alt", matchingProduct["altTxt"]);
         cart__item__img.appendChild(productImg);
         article.appendChild(cart__item__img);
 
-         //création des infos du produit (nom, prix, etc) et insertion dans l'article
+        //création des infos du produit (nom, prix, etc) et insertion dans l'article
         var cart__item__content = document.createElement("div");
         cart__item__content.setAttribute("class", "cart__item__content");
         var cart__item__content__description = document.createElement("div");
         cart__item__content__description.setAttribute("class", "cart__item__content__description");
         var h2 = document.createElement("h2");
-        h2.innerHTML = "Nom du produit" ;
+        h2.innerHTML = matchingProduct["name"];
         var colorP = document.createElement("p");
         colorP.innerHTML = cart[i].chosenColor;
         var priceP = document.createElement("p");
-        priceP.innerHTML = "C'est trop cher" ;
+        priceP.innerHTML = matchingProduct["price"];
         cart__item__content__description.appendChild(h2);
         cart__item__content__description.appendChild(colorP);
         cart__item__content__description.appendChild(priceP);
@@ -63,8 +83,13 @@ if (localStorage.getItem('cart') !== null) {
         cart__item__content__settings__delete.append(deleteItem);
         cart__item__content__settings.appendChild(cart__item__content__settings__delete);
         article.appendChild(cart__item__content__settings);
-        
+
     }
+    
+    })
+    .catch(function(err) {
+    console.log(err);// Une erreur est survenue
+    });
 
 } else {
     console.log('aucun panier dans le local storage');
