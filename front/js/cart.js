@@ -52,7 +52,7 @@ if (localStorage.getItem('cart') !== null) {
         var colorP = document.createElement("p");
         colorP.innerHTML = cart[i].chosenColor;
         var priceP = document.createElement("p");
-        priceP.innerHTML = matchingProduct["price"];
+        priceP.innerHTML = matchingProduct["price"]+" €";
         cart__item__content__description.appendChild(h2);
         cart__item__content__description.appendChild(colorP);
         cart__item__content__description.appendChild(priceP);
