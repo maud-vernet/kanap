@@ -14,6 +14,13 @@ if (localStorage.getItem('cart') !== null) {
 
         // tableau pour stocker les prix des items du cart
         var cartItemPrice = [];
+
+        //objet pour mettre à jour la quantité d'un produit dans le panier
+        const updatedProduct = {
+            id : "id",
+            quantity : 0,
+            chosenColor : "color" 
+        }
         
         // pour chaque produit du cart
         for(let i in cart) {
@@ -72,17 +79,49 @@ if (localStorage.getItem('cart') !== null) {
             cart__item__content__settings__quantity.setAttribute("class", "cart__item__content__settings__quantity");
             var qtyP = document.createElement("p");
             qtyP.innerHTML = "Qté : ";
+            
+            //champs pour la quantité de l'article
             var qtyNumber = document.createElement("input");
             qtyNumber.setAttribute("type", "number");
             qtyNumber.setAttribute("name", "itemQuantity");
             qtyNumber.setAttribute("min", "1");
             qtyNumber.setAttribute("max", "100");
             qtyNumber.setAttribute("value", cart[i].quantity);
+            //écoute du changement de quantité d'un article
+            qtyNumber.addEventListener('change', (event) => {
+                // récupération de la nouvelle quantité
+                var updatedQuantity = parseInt(event.target.value);
+
+                //maj de l'objet updatedProduct avec les infos du produit et la nouvelle quantité
+                updatedProduct["id"] = cart[i].id;
+                updatedProduct["chosenColor"] = cart[i].chosenColor;
+                updatedProduct["quantity"] = updatedQuantity;
+
+                //mise à jour du produit dans le cart
+                if( updatedProduct["id"] == cart[i]["id"] && updatedProduct["chosenColor"] == cart[i]["chosenColor"] ) { //sur le produit du cart correspondant à l'objet avec la quantité mise à jour
+                    
+                    cart[i]["quantity"] = updatedQuantity; //on met à jour la quantité
+                    // ajout du cart dans le local storage
+                    window.localStorage.setItem("cart", JSON.stringify(cart));
+
+                    //recalcul du prix de l'article
+                    
+                    console.log(document.getElementsByClassName("cart__item__content__description"));
+                    console.log(document.getElementsByClassName("cart__item__content__description").lastElementChild);
+                    //document.getElementsByClassName("cart__item__content__description").lastElementChild.textContent = matchingProduct["price"]*cart[i]["quantity"]+" €";
+
+                }
+
+              });
+
             var cart__item__content__settings__delete = document.createElement("div");
             cart__item__content__settings__delete.setAttribute("class", "cart__item__content__settings__delete");
+            
+            // bouton de suppression d'un élément du panier
             var deleteItem = document.createElement("p");
             deleteItem.setAttribute("class", "deleteItem");
             deleteItem.innerHTML = "Supprimer";
+
             cart__item__content__settings__quantity.appendChild(qtyP);
             cart__item__content__settings__quantity.appendChild(qtyNumber);
             cart__item__content__settings.appendChild(cart__item__content__settings__quantity);
@@ -90,7 +129,7 @@ if (localStorage.getItem('cart') !== null) {
             cart__item__content__settings.appendChild(cart__item__content__settings__delete);
             article.appendChild(cart__item__content__settings);
 
-            //somme des éléments d'un tableau ( utilisé sur cartItemPrice pour avoir le prix total du panier)
+            //somme des éléments d'un tableau (utilisé sur cartItemPrice pour avoir le prix total du panier)
             function sumArray(array) {
                 let sum = 0; 
             
