@@ -30,8 +30,7 @@ if (localStorage.getItem('cart') !== null) {
             }
 
             //remplissage du tableau cartItemPrice
-            cartItemPrice.push(matchingProduct["price"]);
-            console.log(cartItemPrice);
+            cartItemPrice.push(matchingProduct["price"]*cart[i].quantity);
             
             //création d'un article dans #cart__items
             var article = document.createElement("article");
@@ -59,7 +58,7 @@ if (localStorage.getItem('cart') !== null) {
             var colorP = document.createElement("p");
             colorP.innerHTML = cart[i].chosenColor;
             var priceP = document.createElement("p");
-            priceP.innerHTML = matchingProduct["price"]+" €";
+            priceP.innerHTML = matchingProduct["price"]*cart[i].quantity+" €";
             cart__item__content__description.appendChild(h2);
             cart__item__content__description.appendChild(colorP);
             cart__item__content__description.appendChild(priceP);
@@ -102,7 +101,6 @@ if (localStorage.getItem('cart') !== null) {
                 }
             
             // return the result 
-                console.log(sum); 
                 return sum;
             }
             
