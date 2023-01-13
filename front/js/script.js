@@ -15,7 +15,7 @@ fetch("http://localhost:3000/api/products")
       // création d'un dans la section id items avec l'url du produit (début url fix + id du produit)
       var a = document.createElement("a");
       var productId = productList[i]._id;
-      a.setAttribute("href", "./product.html?toto=oups&id="+productId);
+      a.setAttribute("href", "./product.html?id="+productId);
       document.getElementById("items").appendChild(a);
 
       // création d'un article dans chaque a

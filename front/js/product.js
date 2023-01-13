@@ -1,25 +1,7 @@
-let params = new URLSearchParams("https://example.com/?name=Jonathan&age=18");
-let toto = params.get("name"); // is the string "Jonathan"
-let age = parseInt(params.get("age"), 10); // is the number 18
-console.log(toto);
-
-    var str = "https://example.com/?name=Jonathan&test=18";
-var url = new URL(str);
-var name = url.searchParams.get("name");
-console.log(name);
-
 // récupération de l'url courante
-var str = window.location.href;
-console.log(str);
-var url = new URLSearchParams(str);
-
-// si le paramètre id est présent dans l'url, on le récupère
-if(url.has("id")) {
-    var id = url.get("id");
-    console.log(id);
-    var baseUrl = "http://localhost:3000/api/products/";
-    console.log(baseUrl.concat('', id));
-}
+var str = (new URL(window.location.href)).searchParams;
+var baseUrl = "http://localhost:3000/api/products/";
+var id = encodeURI(str.get("id"));
 
 // requête un produit en concatenant l'url de base + l'id du produit récupéré depuis l'url courante
 fetch(baseUrl.concat('', id))
