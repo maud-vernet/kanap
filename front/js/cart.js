@@ -21,6 +21,13 @@ if (localStorage.getItem('cart') !== null) {
             quantity : 0,
             chosenColor : "color" 
         }
+
+        //objet pour  supprimer un produit dans le panier
+        const productToDelete = {
+            id : "id",
+            quantity : 0,
+            chosenColor : "color" 
+        }
         
         // pour chaque produit du cart
         for(let i in cart) {
@@ -95,22 +102,18 @@ if (localStorage.getItem('cart') !== null) {
                 //maj de l'objet updatedProduct avec les infos du produit et la nouvelle quantité
                 updatedProduct["id"] = cart[i].id;
                 updatedProduct["chosenColor"] = cart[i].chosenColor;
-                updatedProduct["quantity"] = updatedQuantity;
-
+                
                 //mise à jour du produit dans le cart
                 if( updatedProduct["id"] == cart[i]["id"] && updatedProduct["chosenColor"] == cart[i]["chosenColor"] ) { //sur le produit du cart correspondant à l'objet avec la quantité mise à jour
                     
                     cart[i]["quantity"] = updatedQuantity; //on met à jour la quantité
                     // ajout du cart dans le local storage
                     window.localStorage.setItem("cart", JSON.stringify(cart));
-
-                    //recalcul du prix de l'article
                     
-                    console.log(document.getElementsByClassName("cart__item__content__description"));
-                    console.log(document.getElementsByClassName("cart__item__content__description").lastElementChild);
-                    //document.getElementsByClassName("cart__item__content__description").lastElementChild.textContent = matchingProduct["price"]*cart[i]["quantity"]+" €";
-
                 }
+
+                // rechargement de  la page pour recalcul du prix de l'article et du prix total
+                location.reload();
 
               });
 
@@ -121,7 +124,26 @@ if (localStorage.getItem('cart') !== null) {
             var deleteItem = document.createElement("p");
             deleteItem.setAttribute("class", "deleteItem");
             deleteItem.innerHTML = "Supprimer";
+            //écoute du bouton de suppression
+            deleteItem.addEventListener('click', function() {
+            
+            //suppression de l'article de l'html
+            deleteItem.closest("article").remove();
+            //stockage de l'id et de la couleur de ce produit
+            productToDelete["id"] = cart[i].id;
+            productToDelete["chosenColor"] = cart[i].chosenColor;
 
+            if( productToDelete["id"] == cart[i]["id"] && productToDelete["chosenColor"] == cart[i]["chosenColor"] ) { //pour le produit du cart qui a le même id et la même couleur que l'élément à supprimer
+
+                cart.pop(); //suppression du tableau
+                // ajout du cart dans le local storage
+                window.localStorage.setItem("cart", JSON.stringify(cart));
+            }
+
+            location.reload();
+
+            });
+            
             cart__item__content__settings__quantity.appendChild(qtyP);
             cart__item__content__settings__quantity.appendChild(qtyNumber);
             cart__item__content__settings.appendChild(cart__item__content__settings__quantity);
