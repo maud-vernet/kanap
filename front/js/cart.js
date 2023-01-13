@@ -135,7 +135,7 @@ if (localStorage.getItem('cart') !== null) {
 
             if( productToDelete["id"] == cart[i]["id"] && productToDelete["chosenColor"] == cart[i]["chosenColor"] ) { //pour le produit du cart qui a le même id et la même couleur que l'élément à supprimer
 
-                cart.pop(); //suppression du tableau
+                cart.splice(i,1); //suppression du produit du tableau
                 // ajout du cart dans le local storage
                 window.localStorage.setItem("cart", JSON.stringify(cart));
             }
