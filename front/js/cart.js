@@ -178,3 +178,101 @@ if (localStorage.getItem('cart') !== null) {
 } else {
     console.log('aucun panier dans le local storage');
 }
+
+//Vérification des données du formulaire
+
+var nameRegex = /^[^0-9\/\\_\.]+$/;
+var emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+var addressRegex = /^[a-zA-Z0-9\s,'-]*$/;
+
+// vérif des champs au moment de la saisie par l'utilisateur
+document.getElementById("email").addEventListener("input", checkEmail);
+document.getElementById("firstName").addEventListener("input", checkFirstName);
+document.getElementById("lastName").addEventListener("input", checkLastName);
+document.getElementById("address").addEventListener("input", checkAddress);
+document.getElementById("city").addEventListener("input", checkCity);
+
+//vérif au moment de l'envoi du formulaire
+document.querySelector("form").addEventListener("submit", checkForm);
+
+function checkFirstName(e) {
+    var value = document.getElementById("firstName").value;
+    if (nameRegex.test(value)) {
+        document.getElementById("firstNameErrorMsg").innerHTML = "";
+        return true;
+    } else {
+        document.getElementById("firstNameErrorMsg").innerHTML = "Prénom invalide";
+        return false;
+    }
+};
+
+function checkLastName(e) {
+    var value = document.getElementById("lastName").value;
+    if (nameRegex.test(value)) {
+        document.getElementById("lastNameErrorMsg").innerHTML = "";
+        return true;
+    } else {
+        document.getElementById("lastNameErrorMsg").innerHTML = "Nom invalide";
+        return false;
+    }
+};
+
+function checkAddress(e) {
+    var value = document.getElementById("address").value;
+    if (addressRegex.test(value)) {
+        document.getElementById("addressErrorMsg").innerHTML = "";
+        return(true);
+    } else {
+        document.getElementById("addressErrorMsg").innerHTML = "Adresse invalide";
+        return false;
+    }
+};
+
+function checkCity(e) {
+    var value = document.getElementById("city").value;
+    if (nameRegex.test(value)) {
+        document.getElementById("cityErrorMsg").innerHTML = "";
+        return true;
+    } else {
+        document.getElementById("cityErrorMsg").innerHTML = "ville invalide";
+        return false;
+    }
+}
+
+function checkEmail(e) {
+    var value = document.getElementById("email").value;
+    if (emailRegex.test(value)) {
+        document.getElementById("emailErrorMsg").innerHTML = "";
+        return true;
+    } else {
+        document.getElementById("emailErrorMsg").innerHTML = "Email invalide";
+        return false;
+    }
+}
+
+function checkForm(e) { //vérifie les différent champ et si ok, construit un objet contact avec les infos du formulaire + un tableau des id des produits
+    //e.preventDefault();
+    if(checkFirstName() && checkLastName() && checkAddress() && checkCity() && checkEmail()) {
+        // construction objet contact
+        var contact = {
+            firstName : document.getElementById("firstName").value,
+            lastName : document.getElementById("lastName").value,
+            address : document.getElementById("address").value,
+            city : document.getElementById("city").value,
+            email : document.getElementById("email").value
+        };
+        // construction du tableau de produits
+        var productTable = [];
+        for (i in cart) { //pour chaque élément du cart
+
+        var productId = null;
+        console.log(cart[i].quantity);
+        for (qty = 1; qty <= cart[i].quantity; qty++) { //autant de fois qu'il y a de quantité de l'article
+            productId = cart[i].id; // on stocke l'id
+            productTable.push(productId); //on l'ajoute au tableau des produits
+            }
+        
+        console.log(productTable);
+        }
+    }
+  }
