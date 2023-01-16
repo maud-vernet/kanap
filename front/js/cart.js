@@ -193,7 +193,7 @@ document.getElementById("address").addEventListener("input", checkAddress);
 document.getElementById("city").addEventListener("input", checkCity);
 
 //vérif au moment de l'envoi du formulaire
-document.querySelector("form").addEventListener("submit", checkForm);
+document.querySelector("form").addEventListener("submit", orderRequest);
 
 function checkFirstName(e) {
     var value = document.getElementById("firstName").value;
@@ -250,9 +250,9 @@ function checkEmail(e) {
     }
 }
 
-function checkForm(e) { //vérifie les différent champ et si ok, construit un objet contact avec les infos du formulaire + un tableau des id des produits
-    //e.preventDefault();
-    if(checkFirstName() && checkLastName() && checkAddress() && checkCity() && checkEmail()) {
+function orderRequest(e) { //vérifie les différent champ et si ok, construit la requête pour la commande, l'envoi et redirige vers la page de commande
+    e.preventDefault();
+    if(checkFirstName() && checkLastName() && checkAddress() && checkCity() && checkEmail()) { //vérification des champs
         // construction objet contact
         var contact = {
             firstName : document.getElementById("firstName").value,
@@ -266,13 +266,42 @@ function checkForm(e) { //vérifie les différent champ et si ok, construit un o
         for (i in cart) { //pour chaque élément du cart
 
         var productId = null;
-        console.log(cart[i].quantity);
         for (qty = 1; qty <= cart[i].quantity; qty++) { //autant de fois qu'il y a de quantité de l'article
             productId = cart[i].id; // on stocke l'id
             productTable.push(productId); //on l'ajoute au tableau des produits
             }
-        
-        console.log(productTable);
         }
+
+        //construction du corps de la requête pour la commande (objet contact et tableau des produits)
+        var order = {"contact": contact, "products": productTable}
+
+        //passage de la commande (envoi de la requête, récupération de l'id et redirection)
+        fetch("http://localhost:3000/api/products/order", {
+            method: "POST",
+            headers: {
+            'Accept': 'application/json', 
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(order)
+            })
+            .then(function(res) {
+                if (res.ok) { // vérifie que la requête s'est bien passée
+                    return res.json(); // récupère la réponse en json
+                }
+                })
+            .then(function(value) {
+                //récupère l'id de la commande
+                var orderId = value.orderId;
+
+                //redirection : construction de l'url de redirection : url+orderId
+                var redirectUrl = "./order.html?orderId="+orderId;
+                console.log(redirectUrl);
+                document.location.href = redirectUrl
+                
+            })
+            .catch(function(err) {
+                console.log(err);// Une erreur est survenue
+                });
+
     }
-  }
+}
