@@ -272,36 +272,42 @@ function orderRequest(e) { //vérifie les différent champ et si ok, construit l
             }
         }
 
-        //construction du corps de la requête pour la commande (objet contact et tableau des produits)
-        var order = {"contact": contact, "products": productTable}
+        //vérification de la présence de produits dans le panier
+        if (productTable.length != 0) {
+            //construction du corps de la requête pour la commande (objet contact et tableau des produits)
+            var order = {"contact": contact, "products": productTable}
 
-        //passage de la commande (envoi de la requête, récupération de l'id et redirection)
-        fetch("http://localhost:3000/api/products/order", {
-            method: "POST",
-            headers: {
-            'Accept': 'application/json', 
-            'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(order)
-            })
-            .then(function(res) {
-                if (res.ok) { // vérifie que la requête s'est bien passée
-                    return res.json(); // récupère la réponse en json
-                }
+            //passage de la commande (envoi de la requête, récupération de l'id et redirection)
+            fetch("http://localhost:3000/api/products/order", {
+                method: "POST",
+                headers: {
+                'Accept': 'application/json', 
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(order)
                 })
-            .then(function(value) {
-                //récupère l'id de la commande
-                var orderId = value.orderId;
+                .then(function(res) {
+                    if (res.ok) { // vérifie que la requête s'est bien passée
+                        return res.json(); // récupère la réponse en json
+                    }
+                    })
+                .then(function(value) {
+                    //récupère l'id de la commande
+                    var orderId = value.orderId;
 
-                //redirection : construction de l'url de redirection : url+orderId
-                var redirectUrl = "./confirmation.html?orderId="+orderId;
-                console.log(redirectUrl);
-                document.location.href = redirectUrl
-                
-            })
-            .catch(function(err) {
-                console.log(err);// Une erreur est survenue
-                });
+                    //redirection : construction de l'url de redirection : url+orderId
+                    var redirectUrl = "./confirmation.html?orderId="+orderId;
+                    console.log(redirectUrl);
+                    document.location.href = redirectUrl
+                    
+                })
+                .catch(function(err) {
+                    console.log(err);// Une erreur est survenue
+                    });
+        }
+        else {
+            console.log("pas de produit dans le panier");
+        }
 
     }
 }
