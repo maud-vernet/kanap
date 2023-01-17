@@ -294,7 +294,7 @@ function orderRequest(e) { //vérifie les différent champ et si ok, construit l
                 var orderId = value.orderId;
 
                 //redirection : construction de l'url de redirection : url+orderId
-                var redirectUrl = "./order.html?orderId="+orderId;
+                var redirectUrl = "./confirmation.html?orderId="+orderId;
                 console.log(redirectUrl);
                 document.location.href = redirectUrl
                 
