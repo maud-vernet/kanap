@@ -181,7 +181,7 @@ if (localStorage.getItem('cart') !== null) {
 
 //Vérification des données du formulaire
 
-var nameRegex = /^[a-zA\s-']+$/;
+var nameRegex = /^[a-zA-Z\s-']+$/;
 var emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
 var addressRegex = /^[a-zA-Z0-9\s,'-]*$/;
 
@@ -306,7 +306,7 @@ function orderRequest(e) { //vérifie les différent champ et si ok, construit l
                     });
         }
         else {
-            console.log("pas de produit dans le panier");
+            alert("Vous ne pouvez pas commander, il n'y aucun article dans le panier")
         }
 
     }
