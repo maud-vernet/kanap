@@ -175,8 +175,6 @@ if (localStorage.getItem('cart') !== null) {
     console.log(err);// Une erreur est survenue
     });
 
-} else {
-    console.log('aucun panier dans le local storage');
 }
 
 //Vérification des données du formulaire
@@ -297,7 +295,6 @@ function orderRequest(e) { //vérifie les différent champ et si ok, construit l
 
                     //redirection : construction de l'url de redirection : url+orderId
                     var redirectUrl = "./confirmation.html?orderId="+orderId;
-                    console.log(redirectUrl);
                     document.location.href = redirectUrl
                     
                 })

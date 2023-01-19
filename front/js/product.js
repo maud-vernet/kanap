@@ -50,12 +50,10 @@ document.getElementById("addToCart").addEventListener('click', function() {
     // tableau contenant la liste des produits du panier qui sera stocké dans le local storage
 
     if (localStorage.getItem('cart') !== null) {
-        console.log('panier déjà existant dans le local storage');
         var cart = JSON.parse(localStorage.getItem('cart'));
     } else {
-        console.log('aucun panier dans le local storage');
         var cart = [];
-}
+    }
 
     //objet pour l'item à ajouter au panier
     const newItem = {
@@ -74,20 +72,17 @@ document.getElementById("addToCart").addEventListener('click', function() {
 
         //recherche si on a un produit similaire dans le cart (même id et color)
         if(id == cart[i].id && chosenColor == cart[i].chosenColor) {
-            console.log('produit déjà dans le panier');
             cartItem = cart[i]; // cartItem devient l'élément trouvé (le produit similaire)
         }      
     }
 
     if(cartItem === null) { //si pas de produit similaire trouvé (donc cartItem est resté null)
-        console.log('produit similaire pas dans le panier');
         newItem["id"] = id;
         newItem["chosenColor"] = chosenColor;
         newItem["quantity"] = quantity;
 
         // ajout de l'objet dans le tableau cart
         cart.push(newItem);
-        console.log(cart);
     }
     else { // mise à jour de la quantité sur l'élément trouvé ci-dessus
         cartItem["quantity"] +=quantity; //on additionne la quantité du formulaire avec celle déjà enregistrée dans le produit similaire trouvé dans le cart

@@ -7,8 +7,6 @@ fetch("http://localhost:3000/api/products")
     }
   })
   .then(function(productList) {
-    console.log(productList);  // affiche la réponse en json dans la console
-
     // parcours tous les produits de la réponse et fait les actions pour chaque produit dans la réponse
     for (let i in productList) {
 
