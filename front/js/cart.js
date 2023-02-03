@@ -13,28 +13,14 @@ if (localStorage.getItem('cart') !== null) {
         .then(function (productList) {
 
             // tableau pour stocker les prix des items du cart
-            var cartItemPrice = [];
-
-            //objet pour mettre à jour la quantité d'un produit dans le panier
-            const updatedProduct = {
-                id: "id",
-                quantity: 0,
-                chosenColor: "color"
-            }
-
-            //objet pour  supprimer un produit dans le panier
-            const productToDelete = {
-                id: "id",
-                quantity: 0,
-                chosenColor: "color"
-            }
+            var cartItems = [];
 
             // pour chaque produit du cart
             for (let i in cart) {
                 //stockage de l'id
-                var cartItemId = cart[i].id;
+                let cartItemId = cart[i].id;
 
-                var matchingProduct = null;
+                let matchingProduct = null;
 
                 //recherche dans la liste complète des produits venant le l'API
                 for (let i in productList) {
@@ -44,7 +30,13 @@ if (localStorage.getItem('cart') !== null) {
                 }
 
                 //remplissage du tableau cartItemPrice
-                cartItemPrice.push(matchingProduct["price"] * cart[i].quantity);
+                let cartItem = {
+                    id: cartItemId,
+                    chosenColor: cart[i].chosenColor,
+                    quantity: cart[i].quantity,
+                    price: matchingProduct["price"]
+                };
+                cartItems.push(cartItem);
 
                 //création d'un article dans #cart__items
                 var article = document.createElement("article");
@@ -72,6 +64,7 @@ if (localStorage.getItem('cart') !== null) {
                 var colorP = document.createElement("p");
                 colorP.innerHTML = cart[i].chosenColor;
                 var priceP = document.createElement("p");
+                priceP.setAttribute('class', 'cartItemDisplayedPrice');
                 priceP.innerHTML = matchingProduct["price"] * cart[i].quantity + " €";
                 cart__item__content__description.appendChild(h2);
                 cart__item__content__description.appendChild(colorP);
@@ -99,21 +92,19 @@ if (localStorage.getItem('cart') !== null) {
                     // récupération de la nouvelle quantité
                     var updatedQuantity = parseInt(event.target.value);
 
-                    //maj de l'objet updatedProduct avec les infos du produit et la nouvelle quantité
-                    updatedProduct["id"] = cart[i].id;
-                    updatedProduct["chosenColor"] = cart[i].chosenColor;
-
                     //mise à jour du produit dans le cart
-                    if (updatedProduct["id"] == cart[i]["id"] && updatedProduct["chosenColor"] == cart[i]["chosenColor"]) { //sur le produit du cart correspondant à l'objet avec la quantité mise à jour
-
-                        cart[i]["quantity"] = updatedQuantity; //on met à jour la quantité
-                        // ajout du cart dans le local storage
-                        window.localStorage.setItem("cart", JSON.stringify(cart));
-
-                    }
-
-                    // rechargement de  la page pour recalcul du prix de l'article et du prix total
-                    location.reload();
+                    var storedCart = JSON.parse(localStorage.getItem('cart'));
+                    // recherche de l'index de l'élément à mettre à jour
+                    var toUpdateIndex = storedCart.findIndex((element)=> element.id === cartItem.id && element.chosenColor === cartItem.chosenColor);
+                    storedCart[toUpdateIndex].quantity = updatedQuantity; //on met à jour la quantité
+                    window.localStorage.setItem("cart", JSON.stringify(storedCart)); // ajout du cart dans le local storage
+                    
+                    //recalcul du prix de l'article
+                    cartItem.quantity = updatedQuantity;
+                    displayPriceElem = event.target.closest("article").querySelector(".cartItemDisplayedPrice");
+                    displayPriceElem.innerHTML = cartItem.price * cartItem.quantity + " €";
+                    //recalcul du prix du panier
+                    document.getElementById("totalPrice").innerHTML = sumArray(cartItems);
 
                 });
 
@@ -125,23 +116,21 @@ if (localStorage.getItem('cart') !== null) {
                 deleteItem.setAttribute("class", "deleteItem");
                 deleteItem.innerHTML = "Supprimer";
                 //écoute du bouton de suppression
-                deleteItem.addEventListener('click', function () {
+                deleteItem.addEventListener('click', function (e) {
 
                     //suppression de l'article de l'html
-                    deleteItem.closest("article").remove();
-                    //stockage de l'id et de la couleur de ce produit
-                    productToDelete["id"] = cart[i].id;
-                    productToDelete["chosenColor"] = cart[i].chosenColor;
+                    e.target.closest("article").remove();
+                    
+                    //suppression du produit dans le cart
+                    var storedCart = JSON.parse(localStorage.getItem('cart'));
+                    // recherche de l'index de l'élément à supprimer
+                    var toUpdateIndex = storedCart.findIndex((element)=> element.id === cartItem.id && element.chosenColor === cartItem.chosenColor);
+                    storedCart.splice(toUpdateIndex, 1); //suppression du produit du tableau
+                    window.localStorage.setItem("cart", JSON.stringify(storedCart)); // ajout du cart dans le local storage
 
-                    if (productToDelete["id"] == cart[i]["id"] && productToDelete["chosenColor"] == cart[i]["chosenColor"]) { //pour le produit du cart qui a le même id et la même couleur que l'élément à supprimer
-
-                        cart.splice(i, 1); //suppression du produit du tableau
-                        // ajout du cart dans le local storage
-                        window.localStorage.setItem("cart", JSON.stringify(cart));
-                    }
-
-                    location.reload();
-
+                    //recalcul du prix total du panier
+                    cartItems.splice(toUpdateIndex,1);
+                    document.getElementById("totalPrice").innerHTML = sumArray(cartItems);
                 });
 
                 cart__item__content__settings__quantity.appendChild(qtyP);
@@ -158,7 +147,7 @@ if (localStorage.getItem('cart') !== null) {
                     /*loop over array and add each item to sum
                     */
                     for (const item of array) {
-                        sum += item;
+                        sum += item.price * item.quantity;
                     }
 
                     // return the result 
@@ -166,7 +155,7 @@ if (localStorage.getItem('cart') !== null) {
                 }
 
                 //ajout du prix total à l'élément html correspondant
-                document.getElementById("totalPrice").innerHTML = sumArray(cartItemPrice);
+                document.getElementById("totalPrice").innerHTML = sumArray(cartItems);
 
             }
 
