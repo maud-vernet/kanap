@@ -46,8 +46,6 @@ document.getElementById("addToCart").addEventListener("click", function () {
   var strQuantity = document.getElementById("quantity").value;
   var quantity = parseInt(strQuantity); //conversion de la quantité du formulaire (string) en integer
   var chosenColor = document.getElementById("colors").value;
-  console.log(quantity);
-  console.log(chosenColor);
 
   //si l'utilisateur a bien choisi une couleur et une quantité (entier entre 1 et 100 inclus)
   if (
