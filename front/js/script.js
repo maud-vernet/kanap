@@ -10,35 +10,24 @@ fetch("http://localhost:3000/api/products")
     // parcours tous les produits de la réponse et fait les actions pour chaque produit dans la réponse
     for (let i in productList) {
 
-      // création d'un dans la section id items avec l'url du produit (début url fix + id du produit)
-      var a = document.createElement("a");
-      var productId = productList[i]._id;
-      a.setAttribute("href", "./product.html?id=" + productId);
-      document.getElementById("items").appendChild(a);
-
-      // création d'un article dans chaque a
-      var article = document.createElement("article");
-      a.appendChild(article);
-
-      // création d'une image dans chaque a et ajout de la src et d'un alt pour chaque img
-      var img = document.createElement("img");
+      //création des variables pour stocker les infos de l'article
+      var productUrl = "./product.html?id=" + productList[i]._id;
       var imageUrl = productList[i].imageUrl;
-      img.setAttribute("src", imageUrl);
       var altTxt = productList[i].altTxt;
-      img.setAttribute("alt", altTxt);
-      article.appendChild(img);
+      var productName = productList[i].name;
+      var productDescription = productList[i].description;
 
-      // création d'un h3 de class productName dans chaque a et remplissage avec le nom du produit
-      var h3 = document.createElement("h3");
-      h3.classList.add("productName");
-      h3.innerHTML = productList[i].name;
-      article.appendChild(h3);
-
-      // création d'un p de class productName dans chaque a et remplissage avec la description du produit
-      var p = document.createElement("p");
-      p.classList.add("productDescription");
-      p.innerHTML = productList[i].description;
-      article.appendChild(p);
+      //création du bloc html et utilisation des variables pour insérer les infos
+      document.getElementById("items").innerHTML += 
+      `
+        <a href="${productUrl}">
+              <article>
+                <img src="${imageUrl}" alt="${altTxt}">
+                <h3 class="productName">${productName}</h3>
+                <p class="productDescription">${productDescription}</p>
+              </article>
+        </a>
+      `
     }
 
   })
